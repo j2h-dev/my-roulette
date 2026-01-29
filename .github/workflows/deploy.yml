@@ -4,13 +4,11 @@ on:
   push:
     branches: ["main"]
 
-# 권한 설정 (한곳에 모음)
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 동시 배포 방지 (선택 사항이지만 안전함)
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -31,7 +29,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Matter.js 타입 에러 방지를 위해 명시적 설치 (혹시 모르니 추가)
       - name: Install types
         run: npm install -D @types/matter-js
 
@@ -44,11 +41,11 @@ jobs:
           path: 'build/'
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
